@@ -4,32 +4,31 @@
 
 ## 导出
 
-- `play.py` 会自动导出 Actor 网络
-- MLP → `policy_1.pt`；RNN → `policy_lstm_1.pt`
-- 也可自行导出 TorchScript / ONNX 供 ROS 2 节点加载
+`play.py` 会自动导出 Actor 网络：MLP 存为 `policy_1.pt`，RNN 存为 `policy_lstm_1.pt`。也可以自行导出 TorchScript / ONNX 供 ROS 2 节点加载。
 
 ```bash
 python legged_gym/scripts/play.py --task=g1
-# TODO: 贴你实际的导出命令与产物路径
 ```
 
-## sim2sim（MuJoCo）
+## MuJoCo 验证
 
 ```bash
 python deploy/deploy_mujoco/deploy_mujoco.py g1.yaml
 ```
 
-修改 `deploy/pre_train/{robot}/motion.pt` 或 YAML 里的 `policy_path` 换成自己的策略。
+把 YAML 里的 `policy_path` 换成自己的策略即可。
 
-## 退化定位三层法（我的排查顺序）
+## 退化排查：三层定位法
+
+Isaac Gym 里能走、MuJoCo 里摔倒时，我按这个顺序查：
 
 | 层 | 检查项 | 典型症状 |
 |---|---|---|
 | 观测层 | 观测向量顺序是否逐位一致 | 策略表现像随机动作 |
-| 控制层 | PD 增益单位与量纲是否统一 | 动作幅度整体偏大/偏小 |
-| 模型层 | 阻尼、初始位置、执行器建模 | 真机"使不上劲" |
+| 控制层 | PD 增益单位与量纲是否统一 | 动作幅度整体偏大或偏小 |
+| 模型层 | 阻尼、初始位置、执行器建模 | 真机使不上劲 |
 
-**我的做法**：写脚本逐位比对两个引擎的观测值，**不靠肉眼看行为判断**。
+我的做法是写脚本逐位比对两个引擎的观测值，而不是靠肉眼看行为判断。观测顺序错位的表现不是报错，而是机器人一脸无辜地摔倒——这是它最难查的原因。
 
 ## URDF / MJCF 对表清单
 
@@ -39,14 +38,14 @@ python deploy/deploy_mujoco/deploy_mujoco.py g1.yaml
 - [ ] 阻尼 / 初始位置 / 执行器建模
 - [ ] mimic 从动关节与主动自由度一致
 
-> 更完整的排查手册见同账号仓库：**sim2real-playbook**
+更完整的排查手册见我的另一个仓库：**sim2real-playbook**
 
-## 真机部署（TODO：填你的真实流程与结果）
+## 真机部署
+
+安全顺序不可跳步：**零力矩 → 调试模式 → 悬挂测试 → 落地行走**
 
 ```bash
 python deploy/deploy_real/deploy_real.py <网卡名> g1.yaml
 ```
 
-安全顺序（**不可跳步**）：零力矩 → 调试模式 → 悬挂测试 → 落地行走
-
-TODO: 填真机是否跑通、失败模式、处理方式
+真机结果待补：是否跑通、失败模式是什么、怎么处理的，我会在做完完整测试后补上。
