@@ -49,16 +49,17 @@ python deploy/deploy_real/deploy_real.py <网卡名> g1.yaml
 
 ## 环境
 
-| 项 | 版本 |
-|---|---|
-| OS | Ubuntu 22.04 |
-| GPU | 待补 |
-| Python | 待补 |
-| Isaac Gym | Preview 4 |
-| PyTorch | 待补 |
-| rsl_rl | 待补 |
+| 项 | 上游建议 / 参考值 | 来源 | 我的实测 |
+|---|---|---|---|
+| OS | Ubuntu 18.04+（我用的 22.04） | unitree_rl_gym 安装文档 | Ubuntu 22.04 |
+| NVIDIA 驱动 | 525 及以上 | 同上 | 待补 |
+| Python | 3.6 / 3.7 / 3.8（官方推荐 3.8） | 同上 | 待补 |
+| PyTorch | 1.10 + cu113 | 同上 | 待补 |
+| Isaac Gym | Preview 4 | 同上 | Preview 4 |
+| rsl_rl | v1.0.2 | 同上 | 待补 |
+| GPU 显存 | 每 1GB 显存约支撑 5–10 个并行环境 | 社区整理经验值 | 待补 |
 
-> 环境版本对 legged_gym 影响很大，我踩的第一个坑就是版本不匹配，见 [docs/02-踩坑记录.md](docs/02-踩坑记录.md)。
+> 前六行的建议值来自上游安装文档，可直接对照。环境版本对 legged_gym 影响很大，我踩的第一个坑就是版本不匹配，见 [docs/02-踩坑记录.md](docs/02-踩坑记录.md)。
 
 ---
 
@@ -70,7 +71,7 @@ python deploy/deploy_real/deploy_real.py <网卡名> g1.yaml
 | sim2sim 一致性 | 待补 |
 | 真机行走 | 待补 |
 
-补实测数据时我会把测试条件一起写清楚——没有前提条件的数字没有意义。
+补实测数据时我会把测试条件一起写清楚——没有前提条件的数字没有意义。这三项我不打算用别人的数字填：它们是我自己跑出来的结果，跑完才有。
 
 ---
 
